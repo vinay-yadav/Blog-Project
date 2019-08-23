@@ -52,9 +52,15 @@ from .form import BlogPostForm, BlogPostModelForm
 def blog_post_list_view(request):
     # list out objects
     # could be search
-    now = timezone.now()
-    qs = BlogPost.objects.all()
-    qs = BlogPost.objects.filter(publish_date__lte = now)   # gte -> greater than equal to & lte -> less than equal to
+    # now = timezone.now()
+    qs = BlogPost.objects.published()   # published function in BlogPostManager
+    # qs = BlogPost.objects.all().published()     # custom query set
+    # qs = BlogPost.objects.published()   # BlogPostManager
+    # qs = BlogPost.objects.all()
+    # qs = BlogPost.objects.filter(publish_date__lte = now)   # gte -> greater than equal to & lte -> less than equal to
+    if request.user.is_authenticated:
+        my_qs = BlogPost.objects.filter(user=request.user)
+        qs = (qs|my_qs).distinct()  # combined the queryset of same class
     template_name = "blog/list.html"
     context = {'objects_list': qs}
     return render(request, template_name, context)
@@ -66,7 +72,7 @@ def blog_post_create_view(request):
     # create objects
     # wil create objects using form
     # form = BlogPostForm(request.POST or None)
-    form = BlogPostModelForm(request.POST or None)
+    form = BlogPostModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         # print(form.cleaned_data)
         # # title = form.cleaned_data['title']

@@ -5,6 +5,7 @@ from .form import ContactForm
 
 from blog.models import BlogPost
 
+
 # Don't Repeat Yourself (DRY)
 
 def home_page(request):
@@ -13,7 +14,7 @@ def home_page(request):
     # return render(request, "hey_there.html", {"title":my_title})
     my_title = "Welcome to Try Django"
     qs = BlogPost.objects.all()[:5]
-    context = {'title': my_title, 'blog_list':qs}
+    context = {'title': my_title, 'blog_list': qs}
     # if request.user.is_authenticated:
     #     context = {"title": my_title, "my_list": [1, 2, 3, 4, 5]}
     return render(request, "home.html", context)
@@ -28,7 +29,7 @@ def contact_page(request):
     form = ContactForm(request.POST or None)
     if form.is_valid():
         print(form.cleaned_data)
-        form = ContactForm()    # refreshing data otherwise form.html will have same data every time
+        form = ContactForm()  # refreshing data otherwise form.html will have same data every time
     context = {
         'title': 'Contact Us',
         'form': form

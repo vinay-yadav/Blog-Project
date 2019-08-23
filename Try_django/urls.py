@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.conf import settings
 
 from .views import (
     home_page,
@@ -23,6 +24,7 @@ from .views import (
     example_page,
 )
 from blog.views import *
+from searches.views import search_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,5 +40,12 @@ urlpatterns = [
     path('blog-new/', blog_post_create_view),
     # path('blog/<str:slug>/edit/', blog_post_update_view),
     # path('blog/<str:slug>/delete/', blog_post_delete_view),
-    path('blog/', include('blog.urls'))
+    path('blog/', include('blog.urls')),
+    path('search/', search_view)
 ]
+
+if settings.DEBUG:
+    # test mode
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
