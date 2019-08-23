@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{title}}</h1>
+<!--{{request.user}}
+{{request.path}}
+{{user}}
+{{user.is_authenticated}} -->
+{% if user.is_authenticated %}
+    {% for i in blog_list %}
+        <!--<li>{{i}}</li>-->
+        {% include 'blog/list-inline.html' with blog_post=i truncate=True detail=False %}
+    {% endfor %}
+{% endif %}
+
+{% endblock %}
